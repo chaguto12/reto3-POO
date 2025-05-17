@@ -1,0 +1,66 @@
+class MenuItem:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+        self.total = 0
+
+    def total_price(self):
+        self.total += self.price
+        return self.total
+
+
+class Beverage(MenuItem):
+    def __init__(self, name, price, volume_ml):
+        super().__init__(name, price)
+        self.volume = volume_ml / 100
+        self.price = price * self.volume * 0.5
+
+
+class Appetizer(MenuItem):
+    def __init__(self, name, price, extra_units):
+        super().__init__(name, price)
+        self.price += extra_units * 2  # precio adicional por unidad extra
+
+
+class MainCourse(MenuItem):
+    def __init__(self, name, price, portion_size):
+        super().__init__(name, price)
+        self.price = price * portion_size * 1 / 5  # porción proporcional
+
+
+class Soup(MenuItem):
+    def __init__(self, name, price, volume_ml):
+        super().__init__(name, price)
+        self.volume = volume_ml / 100
+        self.price = price * self.volume
+
+
+class Bill:
+    def __init__(self, tip):
+        self.tip = tip
+        # Entradas
+        self.item_1 = Appetizer("Patacones", 5, 3)
+        # Sopas
+        self.item_2 = Soup("Ajiaco", 12, 300)
+        self.item_3 = Soup("Menudencias", 10, 250)
+        self.item_4 = Soup("Sancocho", 14, 350)
+        # Platos fuertes
+        self.item_5 = MainCourse("Carne", 18, 10)
+        self.item_6 = MainCourse("Gallina", 16, 12)
+        self.item_7 = MainCourse("Vegetariano", 15, 8)
+        # Bebidas
+        self.item_8 = Beverage("Cerveza", 5, 330)
+        self.item_9 = Beverage("Cola y Pola", 4, 400)
+        self.item_10 = Beverage("Agua", 2, 500)
+
+        self.list = [
+            self.item_1, self.item_2, self.item_3, self.item_4,
+            self.item_5, self.item_6, self.item_7,
+            self.item_8, self.item_9, self.item_10
+        ]
+
+    def total(self):
+        total = 0
+        for item in self.list:
+            total += item.total_price()
+        return total + self.tip
