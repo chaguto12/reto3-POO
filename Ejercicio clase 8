@@ -1,0 +1,61 @@
+import math
+
+class Point:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+class Line:
+    def __init__(self, start: Point, end: Point):
+        self.start = start
+        self.end = end
+        self.length = self.compute_length()
+        self.slope = self.compute_slope()
+
+    def compute_length(self):
+        dx = self.end.x - self.start.x
+        dy = self.end.y - self.start.y
+        return math.hypot(dx, dy)
+
+    def compute_slope(self):
+        dx = self.end.x - self.start.x
+        dy = self.end.y - self.start.y
+        if dx == 0:
+            return float('inf')  # pendiente vertical infinita
+        return dy / dx
+
+    def compute_horizontal_cross(self):
+        return self.start.y * self.end.y <= 0
+
+    def compute_vertical_cross(self):
+        return self.start.x * self.end.x <= 0
+
+class Rectangle:
+    def __init__(self, width: float = 0, height: float = 0, center: Point = Point(0, 0)):
+        self.width = width
+        self.height = height
+        self.center = center
+
+        # Esquinas
+        self.down_left = Point(center.x - width / 2, center.y - height / 2)
+        self.top_right = Point(center.x + width / 2, center.y + height / 2)
+        self.top_left = Point(center.x - width / 2, center.y + height / 2)
+        self.down_right = Point(center.x + width / 2, center.y - height / 2)
+
+        # Lados
+        self.top_line = Line(self.top_left, self.top_right)
+        self.right_line = Line(self.top_right, self.down_right)
+        self.bottom_line = Line(self.down_right, self.down_left)
+        self.left_line = Line(self.down_left, self.top_left)
+
+    def compute_area(self):
+        return self.width * self.height
+
+    def compute_perimeter(self):
+        return 2 * (self.width + self.height)
+
+    def inside_point(self, point: Point):
+        return (self.down_left.x <= point.x <= self.top_right.x and
+                self.down_left.y <= point.y <= self.top_right.y)
+
+
